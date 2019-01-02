@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,8 +50,11 @@ class BluetoothFragment : Fragment() {
         return viewBinding.root
     }
 
-    private val MIDI_BLE_UUID = ParcelUuid(UUID.fromString("03B80E5A-EDE8-4B33-A751-6CE34EC4C700"))
-    private val filters = mutableListOf<ScanFilter>(ScanFilter.Builder().setServiceUuid(MIDI_BLE_UUID).build())
+    private val filters = mutableListOf<ScanFilter>(
+        ScanFilter.Builder().setServiceUuid(
+            ParcelUuid(UUID.fromString(MIDI_BLE_UUID))
+        ).build()
+    )
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -82,10 +84,6 @@ class BluetoothFragment : Fragment() {
         if (requestCode == PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             scanForDevices(listAdapter)
         } else {
-            Log.e(
-                "Bluetooth",
-                "onRequestPermissionsResult: requestCode: $requestCode, permissions: $permissions, grantResults: $grantResults"
-            )
             Toast.makeText(activity, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
@@ -117,7 +115,6 @@ class BluetoothFragment : Fragment() {
     }
 
     private fun scanForDevices(adapter: BluetoothDeviceAdapter) {
-        val scanner = bluetoothAdapter?.bluetoothLeScanner
         val scanCallback = object : ScanCallback() {
             override fun onScanFailed(errorCode: Int) {
                 super.onScanFailed(errorCode)
@@ -138,8 +135,9 @@ class BluetoothFragment : Fragment() {
                 }
             }
         }
+        val scanner = bluetoothAdapter.bluetoothLeScanner
         handler.postDelayed({
-            scanner.stopScan(scanCallback)
+            scanner?.stopScan(scanCallback)
         }, SCAN_PERIOD)
         scanner.startScan(filters, null, scanCallback)
     }
@@ -148,6 +146,7 @@ class BluetoothFragment : Fragment() {
         private const val REQUEST_ENABLE_BT: Int = 1
         private const val PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 33
         private const val SCAN_PERIOD: Long = 10000
+        private const val MIDI_BLE_UUID = "03B80E5A-EDE8-4B33-A751-6CE34EC4C700"
     }
 }
 
