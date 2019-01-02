@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings"
+            android:tint="@color/colorPrimaryDark"
+        />
+        <item
+            android:id="@+id/nav_bluetooth"
+            android:title="@string/bluetooth_devices"
+            android:icon="@drawable/ic_bluetooth_searching"
+            android:tint="@color/colorPrimaryDark"
+        />
+    </group>
+</menu>

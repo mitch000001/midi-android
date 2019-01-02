@@ -1,5 +1,6 @@
 package org.mitchwork.midi
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.ActionBar
@@ -22,9 +23,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
+    private var isBluetoothSupported: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isBluetoothSupported = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(
             this,
@@ -47,6 +50,26 @@ class MainActivity : AppCompatActivity() {
 
         // Set up navigation menu
         navigationView.setupWithNavController(navController)
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            // close drawer when item is tapped
+            drawerLayout.closeDrawers()
+
+            when (menuItem.itemId) {
+                R.id.nav_settings -> {
+                    val direction = MidiDeviceListFragmentDirections.actionGlobalSettingsFragment()
+                    navController.navigate(direction)
+                }
+                R.id.nav_bluetooth -> {
+                    navController.navigate(R.id.action_global_scan_bluetooth_devices)
+                }
+                else -> {
+                    Log.e("MIDI", "selected menu item: ${menuItem.itemId}")
+                }
+            }
+            true
+        }
+        navigationView.menu.findItem(R.id.nav_bluetooth).isVisible = isBluetoothSupported
     }
 
 

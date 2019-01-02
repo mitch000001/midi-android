@@ -16,6 +16,7 @@
     <string name="midi_device_item_channel_prefix">Channel</string>
 
     <string name="bindings_empty">No midi bindings found</string>
+    <string name="settings">Settings</string>
     <string name="midi_device_details_tab_control_changes">Control Changes</string>
     <string name="midi_device_details_tab_program_changes">Program Changes</string>
     <string name="midi_device_details_tab_sysex">SysEx</string>
@@ -26,4 +27,9 @@
     <string name="cc_controller_value_placeholder">Controller value</string>
     <string name="cc_controller_number_placeholder">Controller number</string>
     <string name="control_changes_empty">No controlChanges</string>
+    <string name="no_bluetooth_devices">No bluetooth devices found</string>
+    <string name="bluetooth_devices">Bluetooth devices</string>
+    <string name="error_bluetooth_not_supported">Bluetooth is not supported on this device</string>
+    <string name="why_btle_location">Location permission is needed to scan for Bluetooth LE devices</string>
+    <string name="bluetooth_is_required">Bluetooth needs to be enabled to scan for devices</string>
 </resources>
