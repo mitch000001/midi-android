@@ -3,6 +3,7 @@ package org.mitchwork.midi
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
@@ -10,6 +11,8 @@ import android.bluetooth.le.ScanResult
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.midi.MidiDevice
+import android.media.midi.MidiManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
@@ -29,7 +32,7 @@ import java.util.*
 private val BluetoothAdapter.isDisabled: Boolean
     get() = !isEnabled
 
-class BluetoothFragment : Fragment() {
+class BluetoothFragment : Fragment(), MidiManager.OnDeviceOpenedListener {
 
     private lateinit var handler: Handler
     private lateinit var viewBinding: FragmentBluetoothBinding
@@ -66,7 +69,14 @@ class BluetoothFragment : Fragment() {
         val bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
-        listAdapter = BluetoothDeviceAdapter()
+        val midiManager: MidiManager = requireContext().getSystemService(Context.MIDI_SERVICE) as MidiManager
+        val handler = Handler()
+
+        listAdapter = BluetoothDeviceAdapter(object : BluetoothDeviceAdapter.OnBluetoothSelectedListener{
+            override fun onBluetoothDeviceSelected(device: BluetoothDevice) {
+                midiManager.openBluetoothDevice(device, this@BluetoothFragment, handler)
+            }
+        })
         viewBinding.bluetoothList.adapter = listAdapter
 
         viewBinding.clickListener = View.OnClickListener {
@@ -78,6 +88,14 @@ class BluetoothFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onDeviceOpened(device: MidiDevice?) {
+        if (device == null) {
+            Snackbar.make(requireNotNull(this.view), R.string.open_midi_device_failed, Snackbar.LENGTH_LONG)
+        }
+        val direction =  BluetoothFragmentDirections.actionSelectBluetoothDevice()
+        findNavController().navigate(direction)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

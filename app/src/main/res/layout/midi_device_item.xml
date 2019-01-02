@@ -21,7 +21,6 @@
                 android:background="@android:drawable/ic_dialog_info"
                 android:layout_gravity="center"
                 android:src="@{device.imageUrl}"
-                tools:srcCompat="@tools:sample/avatars"
                 android:contentDescription="@string/midi_device_image"/>
         <LinearLayout
                 android:layout_width="0dp"

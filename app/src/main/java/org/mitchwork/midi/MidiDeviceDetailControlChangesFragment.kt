@@ -39,6 +39,7 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
         val factory = MidiDeviceDetailViewModelFactory(repository, deviceID)
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
+
         viewBinding.midiDeviceAddBindings.setOnClickListener {
             val direction = MidiDeviceDetailFragmentDirections.actionMidiDeviceDetailFragmentToContolChangeEditFragment(deviceID)
             it.findNavController().navigate(direction)

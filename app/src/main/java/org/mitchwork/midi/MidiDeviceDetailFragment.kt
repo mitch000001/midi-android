@@ -38,7 +38,8 @@ class MidiDeviceDetailFragment : Fragment() {
 
         val activity = requireActivity() as AppCompatActivity
 
-        val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
+        val fragmentArgs = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!)
+        val deviceID = fragmentArgs.deviceID
 
         val midiManager: MidiManager = requireContext().getSystemService(Context.MIDI_SERVICE) as MidiManager
 

@@ -19,7 +19,9 @@ class MidiDeviceRepository private constructor(
         }
     }
 
-    fun getDeviceByID(id: String): LiveData<MidiDevice> = midiDeviceDao.getDeviceByID(id)
+    fun getDeviceByID(id: String): LiveData<MidiDevice> {
+        return midiDeviceDao.getDeviceByID(id)
+    }
 
     fun getControlChangesForMidiDevice(deviceID: String) = controlChangeDao.getAllForMidiDevice(deviceID)
 

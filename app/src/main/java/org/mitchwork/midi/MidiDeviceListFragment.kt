@@ -30,9 +30,6 @@ class MidiDeviceListFragment : Fragment() {
         viewBinding = FragmentMidiDeviceListBinding.inflate(inflater, container, false)
         viewBinding.setLifecycleOwner(this@MidiDeviceListFragment)
 
-        listAdapter = MidiDeviceAdapter()
-        viewBinding.midiDeviceList.adapter = listAdapter
-
         return viewBinding.root
     }
 
@@ -43,6 +40,9 @@ class MidiDeviceListFragment : Fragment() {
         val db = AppDatabase.getInstance(requireContext())
         val repository = MidiDeviceRepository.getInstance(db.midiDeviceDao(), db.controlChangeDao(), midiManager)
         val factory = MidiDeviceListViewModelFactory(repository)
+
+        listAdapter = MidiDeviceAdapter()
+        viewBinding.midiDeviceList.adapter = listAdapter
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceListViewModel::class.java)
         viewBinding.fab.setOnClickListener {

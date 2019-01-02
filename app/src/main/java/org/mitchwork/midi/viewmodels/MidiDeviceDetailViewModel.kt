@@ -1,7 +1,6 @@
 package org.mitchwork.midi.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,13 +15,9 @@ class MidiDeviceDetailViewModel internal constructor(
     private val midiDeviceRepository: MidiDeviceRepository,
     private val deviceID: String
 )  : ViewModel() {
+
     val device: LiveData<MidiDevice> = midiDeviceRepository.getDeviceByID(deviceID)
     val controlChanges: LiveData<List<ControlChange>> = midiDeviceRepository.getControlChangesForMidiDevice(deviceID)
-    val selectedTab = MutableLiveData<Int>()
-
-    fun selectTab(index: Int) {
-        selectedTab.value = index
-    }
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)
