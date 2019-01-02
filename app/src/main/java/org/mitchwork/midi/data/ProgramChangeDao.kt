@@ -1,6 +1,6 @@
-package org.mitchwork.midi.persistence
+package org.mitchwork.midi.data
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -15,8 +15,8 @@ interface ProgramChangeDao {
     fun deleteProgramChanges(vararg programChanges: ProgramChange)
 
     @Query("SELECT * FROM program_changes")
-    fun getAll(): MutableLiveData<List<ProgramChange>>
+    fun getAll(): LiveData<List<ProgramChange>>
 
     @Query("SELECT * FROM program_changes WHERE midi_device_id = :deviceID")
-    fun getAllForMidiDevice(deviceID: Int): MutableLiveData<List<ProgramChange>>
+    fun getAllForMidiDevice(deviceID: Long): LiveData<List<ProgramChange>>
 }

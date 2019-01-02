@@ -1,6 +1,6 @@
-package org.mitchwork.midi.persistence
+package org.mitchwork.midi.data
 
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
@@ -15,5 +15,13 @@ interface MidiDeviceDao {
     fun deleteDevice(vararg devices: MidiDevice)
 
     @Query("SELECT * FROM midi_devices")
-    fun getAll(): MutableLiveData<List<MidiDevice>>
+    fun getAll(): LiveData<List<MidiDevice>>
+
+    @Transaction
+    @Query("SELECT * FROM midi_devices WHERE uid = :id")
+    fun getDeviceWithBindingsByID(id: String): LiveData<MidiDeviceWithBindings>
+
+    @Query("SELECT * FROM midi_devices WHERE uid = :id")
+    fun getDeviceByID(id: String): LiveData<MidiDevice>
+
 }

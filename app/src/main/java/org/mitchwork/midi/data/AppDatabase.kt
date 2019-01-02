@@ -1,4 +1,4 @@
-package org.mitchwork.midi.persistence
+package org.mitchwork.midi.data
 
 import android.content.Context
 import androidx.room.Database
@@ -11,7 +11,8 @@ import androidx.room.RoomDatabase
         ControlChange::class,
         ProgramChange::class
     ),
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun midiDeviceDao(): MidiDeviceDao

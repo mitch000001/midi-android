@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Midi</string>
+    <string name="midi_device_image">midi device image</string>
+    <string name="midi_device_name">midi device name</string>
+    <string name="navigation_drawer_header_content_description">header image</string>
+    <string name="navigation_drawer_header_title">Midi Controller</string>
+    <string name="create_mididevice_header">Create new MidiDevice</string>
+    <string name="midi_device_name_placeholder">Device name</string>
+    <string name="midi_device_channel_placeholder">Midi channel</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_create">Create</string>
+    <string name="midi_device_input_for_device_name">Input for device name</string>
+    <string name="midi_device_input_for_midi_channel">Input for midi channel</string>
+    <string name="devices_empty">No devices</string>
+    <string name="midi_device_channel">midi_device_item_midi_channel</string>
+    <string name="midi_device_item_channel_prefix">Channel</string>
 </resources>

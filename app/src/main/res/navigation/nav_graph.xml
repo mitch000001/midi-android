@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/midiDeviceListFragment">
+
+    <fragment
+            android:id="@+id/midiDeviceListFragment"
+            android:name="org.mitchwork.midi.MidiDeviceListFragment"
+            android:label="List MidiDevices">
+        <action
+                android:id="@+id/action_midiDeviceListFragment_to_midiDeviceEditFragment"
+                app:destination="@+id/midiDeviceEditFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/midiDeviceListFragment"
+        />
+        
+    </fragment>
+    <fragment
+            android:id="@+id/midiDeviceEditFragment"
+            android:name="org.mitchwork.midi.MidiDeviceEditFragment"
+            android:label="Edit MidiDevice"
+            tools:layout="@layout/fragment_midi_device_edit">
+        <action
+                android:id="@+id/action_midiDeviceEditFragment_to_midiDeviceListFragment"
+                app:destination="@+id/midiDeviceListFragment"
+        />
+    </fragment>
+
+</navigation>
