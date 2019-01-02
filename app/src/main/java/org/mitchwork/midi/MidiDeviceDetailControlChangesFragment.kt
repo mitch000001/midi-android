@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import org.mitchwork.midi.adapters.ControlChangeAdapter
 import org.mitchwork.midi.data.AppDatabase
+import org.mitchwork.midi.data.ControlChange
 import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentMidiDeviceDetailControlChangesBinding
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModel
@@ -38,7 +39,11 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
 
-        listAdapter = ControlChangeAdapter(viewModel)
+        listAdapter = ControlChangeAdapter(object : ControlChangeAdapter.OnControlChangeValueChangedListener{
+            override fun onControlChangeValueChanged(view: View, item: ControlChange) {
+                viewModel.updateControlChange(item)
+            }
+        })
         viewBinding.midiDeviceControlChanges.adapter = listAdapter
 
         viewBinding.midiDeviceAddBindings.setOnClickListener {

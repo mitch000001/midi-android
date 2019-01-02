@@ -3,14 +3,18 @@ package org.mitchwork.midi.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.mitchwork.midi.MidiDeviceListFragmentDirections
 import org.mitchwork.midi.data.MidiDevice
 import org.mitchwork.midi.databinding.MidiDeviceItemBinding
 
-class MidiDeviceAdapter: ListAdapter<MidiDevice, MidiDeviceAdapter.ViewHolder>(MidiDeviceDiffCallback()) {
+class MidiDeviceListAdapter(
+    private val onDeviceClickedListener: OnDeviceClickedListener
+): ListAdapter<MidiDevice, MidiDeviceListAdapter.ViewHolder>(MidiDeviceDiffCallback()) {
+
+    interface OnDeviceClickedListener {
+        fun onDeviceClicked(view: View, deviceID: String)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -28,8 +32,7 @@ class MidiDeviceAdapter: ListAdapter<MidiDevice, MidiDeviceAdapter.ViewHolder>(M
 
     private fun createOnClickListener(deviceID: String): View.OnClickListener {
         return View.OnClickListener {
-            val direction = MidiDeviceListFragmentDirections.actionMidiDeviceListFragmentToMidiDeviceDetailFragment(deviceID)
-            it.findNavController().navigate(direction)
+            onDeviceClickedListener.onDeviceClicked(it, deviceID)
         }
     }
 

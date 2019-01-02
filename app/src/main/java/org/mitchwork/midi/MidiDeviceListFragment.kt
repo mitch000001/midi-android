@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import org.mitchwork.midi.adapters.MidiDeviceAdapter
+import org.mitchwork.midi.adapters.MidiDeviceListAdapter
 import org.mitchwork.midi.data.AppDatabase
 import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentMidiDeviceListBinding
@@ -21,7 +21,7 @@ class MidiDeviceListFragment : Fragment() {
 
     private lateinit var viewModel: MidiDeviceListViewModel
     private lateinit var viewBinding: FragmentMidiDeviceListBinding
-    private lateinit var listAdapter: MidiDeviceAdapter
+    private lateinit var listAdapter: MidiDeviceListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +41,12 @@ class MidiDeviceListFragment : Fragment() {
         val repository = MidiDeviceRepository.getInstance(db.midiDeviceDao(), db.controlChangeDao(), midiManager)
         val factory = MidiDeviceListViewModelFactory(repository)
 
-        listAdapter = MidiDeviceAdapter()
+        listAdapter = MidiDeviceListAdapter(object : MidiDeviceListAdapter.OnDeviceClickedListener{
+            override fun onDeviceClicked(view: View, deviceID: String) {
+                val direction = MidiDeviceListFragmentDirections.actionMidiDeviceListFragmentToMidiDeviceDetailFragment(deviceID)
+                view.findNavController().navigate(direction)
+            }
+        })
         viewBinding.midiDeviceList.adapter = listAdapter
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceListViewModel::class.java)
