@@ -14,4 +14,16 @@
     <string name="devices_empty">No devices</string>
     <string name="midi_device_channel">midi_device_item_midi_channel</string>
     <string name="midi_device_item_channel_prefix">Channel</string>
+
+    <string name="bindings_empty">No midi bindings found</string>
+    <string name="midi_device_details_tab_control_changes">Control Changes</string>
+    <string name="midi_device_details_tab_program_changes">Program Changes</string>
+    <string name="midi_device_details_tab_sysex">SysEx</string>
+    <string name="sysex_empty">No SysEx messages found</string>
+    <string name="cc_name_placeholder">parameter name</string>
+    <string name="update_cc_header">Update ControlChange</string>
+    <string name="create_cc_header">Create ControlChange</string>
+    <string name="cc_controller_value_placeholder">Controller value</string>
+    <string name="cc_controller_number_placeholder">Controller number</string>
+    <string name="control_changes_empty">No controlChanges</string>
 </resources>

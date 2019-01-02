@@ -16,7 +16,15 @@
                 app:launchSingleTop="true"
                 app:popUpTo="@+id/midiDeviceListFragment"
         />
-        
+        <action
+                android:id="@+id/action_midiDeviceListFragment_to_midiDeviceDetailFragment"
+                app:destination="@+id/midiDeviceDetailFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@id/midiDeviceListFragment"
+        />
     </fragment>
     <fragment
             android:id="@+id/midiDeviceEditFragment"
@@ -28,5 +36,30 @@
                 app:destination="@+id/midiDeviceListFragment"
         />
     </fragment>
-
+    <fragment android:id="@+id/midiDeviceDetailFragment"
+              android:name="org.mitchwork.midi.MidiDeviceDetailFragment"
+              android:label="MidiDevice Details"
+              tools:layout="@layout/fragment_midi_device_detail">
+        <argument
+                android:name="deviceID"
+                app:argType="string"
+        />
+        <action android:id="@+id/action_midiDeviceDetailFragment_to_contolChangeEditFragment"
+                app:destination="@id/contolChangeEditFragment"
+                app:popUpTo="@+id/midiDeviceDetailFragment"
+        />
+    </fragment>
+    <fragment android:id="@+id/contolChangeEditFragment"
+              android:name="org.mitchwork.midi.ContolChangeEditFragment"
+              android:label="fragment_contol_change_edit"
+              tools:layout="@layout/fragment_control_change_edit">
+        <argument
+                android:name="deviceID"
+                app:argType="string"
+        />
+        <action
+                android:id="@+id/action_contolChangeEditFragment_to_midiDeviceDetailFragment"
+                app:destination="@id/midiDeviceDetailFragment"
+        />
+    </fragment>
 </navigation>
