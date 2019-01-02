@@ -28,8 +28,6 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewBinding = FragmentMidiDeviceDetailControlChangesBinding.inflate(inflater, container, false)
-        listAdapter = ControlChangeAdapter()
-        viewBinding.midiDeviceControlChanges.adapter = listAdapter
 
         val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
 
@@ -39,6 +37,9 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
         val factory = MidiDeviceDetailViewModelFactory(repository, deviceID)
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
+
+        listAdapter = ControlChangeAdapter(viewModel)
+        viewBinding.midiDeviceControlChanges.adapter = listAdapter
 
         viewBinding.midiDeviceAddBindings.setOnClickListener {
             val direction = MidiDeviceDetailFragmentDirections.actionMidiDeviceDetailFragmentToContolChangeEditFragment(deviceID)

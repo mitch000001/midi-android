@@ -23,11 +23,19 @@ class MidiDeviceRepository private constructor(
         return midiDeviceDao.getDeviceByID(id)
     }
 
-    fun getControlChangesForMidiDevice(deviceID: String) = controlChangeDao.getAllForMidiDevice(deviceID)
+    fun getControlChangesForMidiDevice(deviceID: String): LiveData<List<ControlChange>> {
+        return controlChangeDao.getAllForMidiDevice(deviceID)
+    }
 
     suspend fun saveControlChange(cc: ControlChange) {
         withContext(IO) {
             controlChangeDao.insertControlChanges(cc)
+        }
+    }
+
+    suspend fun updateControlChange(controlChange: ControlChange) {
+        withContext(IO) {
+            controlChangeDao.updateControlChanges(controlChange)
         }
     }
 

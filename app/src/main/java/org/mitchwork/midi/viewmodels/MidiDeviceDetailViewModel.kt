@@ -15,7 +15,6 @@ class MidiDeviceDetailViewModel internal constructor(
     private val midiDeviceRepository: MidiDeviceRepository,
     private val deviceID: String
 )  : ViewModel() {
-
     val device: LiveData<MidiDevice> = midiDeviceRepository.getDeviceByID(deviceID)
     val controlChanges: LiveData<List<ControlChange>> = midiDeviceRepository.getControlChangesForMidiDevice(deviceID)
 
@@ -37,4 +36,11 @@ class MidiDeviceDetailViewModel internal constructor(
             midiDeviceRepository.saveControlChange(cc)
         }
     }
+
+    fun updateControlChange(cc: ControlChange) {
+        viewModelScope.launch {
+            midiDeviceRepository.updateControlChange(cc)
+        }
+    }
+
 }
