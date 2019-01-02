@@ -9,6 +9,7 @@
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="false"
             app:cardCornerRadius="8dp"
             app:cardUseCompatPadding="true">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
-            <SeekBar
+            <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/value_seekbar"
                     style="@android:style/Widget.Material.SeekBar.Discrete"
                     android:layout_width="match_parent"
