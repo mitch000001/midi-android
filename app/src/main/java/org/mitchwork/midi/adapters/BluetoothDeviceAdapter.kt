@@ -1,6 +1,5 @@
 package org.mitchwork.midi.adapters
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanResult
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,9 @@ import org.mitchwork.midi.databinding.BluetoothDeviceItemBinding
 class BluetoothDeviceAdapter(
     private val selectedListener: OnBluetoothSelectedListener
 ) : ListAdapter<ScanResult, BluetoothDeviceAdapter.ViewHolder>(BluetoothScanResultDiffCallback()) {
+    interface OnBluetoothSelectedListener {
+        fun onBluetoothResultSelected(result: ScanResult)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return BluetoothDeviceAdapter.ViewHolder(
@@ -25,13 +27,13 @@ class BluetoothDeviceAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val result = getItem(position)
         holder.apply {
-            bind(createConnectClickListener(result.device), result)
+            bind(createConnectClickListener(result), result)
             itemView.tag = result
         }
     }
 
-    private fun createConnectClickListener(device: BluetoothDevice): View.OnClickListener = View.OnClickListener {
-        selectedListener.onBluetoothDeviceSelected(device)
+    private fun createConnectClickListener(result: ScanResult): View.OnClickListener = View.OnClickListener {
+        selectedListener.onBluetoothResultSelected(result)
     }
 
     class ViewHolder(private val binding: BluetoothDeviceItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -44,9 +46,6 @@ class BluetoothDeviceAdapter(
         }
     }
 
-    interface OnBluetoothSelectedListener {
-        fun onBluetoothDeviceSelected(device: BluetoothDevice)
-    }
 }
 
 class BluetoothScanResultDiffCallback : DiffUtil.ItemCallback<ScanResult>() {

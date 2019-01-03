@@ -3,7 +3,6 @@ package org.mitchwork.midi
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
@@ -68,8 +67,8 @@ class BluetoothFragment : Fragment() {
         bluetoothAdapter = bluetoothManager.adapter
 
         listAdapter = BluetoothDeviceAdapter(object : BluetoothDeviceAdapter.OnBluetoothSelectedListener{
-            override fun onBluetoothDeviceSelected(device: BluetoothDevice) {
-
+            override fun onBluetoothResultSelected(result: ScanResult) {
+                // TODO: handle selection
             }
         })
         viewBinding.bluetoothList.adapter = listAdapter
