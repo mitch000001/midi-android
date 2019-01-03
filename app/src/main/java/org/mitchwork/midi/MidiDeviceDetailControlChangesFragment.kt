@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -40,7 +41,11 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
 
         listAdapter = ControlChangeAdapter(object : ControlChangeAdapter.OnControlChangeValueChangedListener{
-            override fun onControlChangeValueChanged(view: View, item: ControlChange) {
+            override fun onControlChangeValueChange(view: SeekBar, item: ControlChange) {
+                // TODO: update midi device
+            }
+
+            override fun onControlChangeValueChanged(view: SeekBar, item: ControlChange) {
                 viewModel.updateControlChange(item)
             }
         })

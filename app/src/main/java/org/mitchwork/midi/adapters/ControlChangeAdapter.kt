@@ -1,7 +1,6 @@
 package org.mitchwork.midi.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.recyclerview.widget.ListAdapter
@@ -13,7 +12,8 @@ class ControlChangeAdapter(
     private val onControlChangeValueChangedListener: OnControlChangeValueChangedListener
 ): ListAdapter<ControlChange, ControlChangeAdapter.ViewHolder>(ControlChangeDiffCallback()) {
     interface OnControlChangeValueChangedListener {
-        fun onControlChangeValueChanged(view: View, item: ControlChange)
+        fun onControlChangeValueChanged(view: SeekBar, item: ControlChange)
+        fun onControlChangeValueChange(view: SeekBar, item: ControlChange)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,11 +42,14 @@ class ControlChangeAdapter(
 
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {
                         if (seekBar == null) return
-                        item.value = seekBar.progress
                         onChangedListener.onControlChangeValueChanged(seekBar, item)
                     }
 
-                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (seekBar == null) return
+                        item.value = progress
+                        onChangedListener.onControlChangeValueChange(seekBar, item)
+                    }
                 })
                 executePendingBindings()
             }
