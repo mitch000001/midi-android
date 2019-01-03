@@ -24,10 +24,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
     private var isBluetoothSupported: Boolean = false
+    private var isMidiSupported: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isBluetoothSupported = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+        isMidiSupported = packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI)
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(
             this,
@@ -57,8 +59,10 @@ class MainActivity : AppCompatActivity() {
 
             when (menuItem.itemId) {
                 R.id.nav_settings -> {
-                    val direction = MidiDeviceListFragmentDirections.actionGlobalSettingsFragment()
-                    navController.navigate(direction)
+                    navController.navigate(R.id.action_global_settingsFragment)
+                }
+                R.id.nav_midi_devices -> {
+                    navController.navigate(R.id.action_global_availableMidiDevices)
                 }
                 R.id.nav_bluetooth -> {
                     navController.navigate(R.id.action_global_scan_bluetooth_devices)
@@ -70,6 +74,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
         navigationView.menu.findItem(R.id.nav_bluetooth).isVisible = isBluetoothSupported
+        navigationView.menu.findItem(R.id.nav_midi_devices).isVisible = isMidiSupported
     }
 
 

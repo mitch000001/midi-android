@@ -78,8 +78,25 @@
               tools:layout="@layout/fragment_bluetooth"
     >
         <action android:id="@+id/action_selectBluetoothDevice"
-                app:destination="@id/midiDeviceListFragment"
+                app:destination="@+id/availableMidiDevicesFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment android:id="@+id/availableMidiDevicesFragment"
+              android:name="org.mitchwork.midi.AvailableMidiDevicesFragment"
+              android:label="fragment_available_midi_devices"
+              tools:layout="@layout/fragment_available_midi_devices">
+        <argument
+                android:name="bluetoothResult"
+                app:nullable="true"
+                app:argType="android.bluetooth.le.ScanResult"
         />
+        <action android:id="@+id/action_availableMidiDevicesFragment_to_midiDeviceListFragment"
+                app:destination="@id/midiDeviceListFragment" app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim" app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
     <action
             android:id="@+id/action_global_scan_bluetooth_devices"
@@ -90,5 +107,12 @@
             android:id="@+id/action_global_settingsFragment"
             app:destination="@id/settingsFragment"
             app:popUpTo="@id/midiDeviceListFragment"
+    />
+    <action android:id="@+id/action_global_availableMidiDevices"
+            app:destination="@id/availableMidiDevicesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
     />
 </navigation>

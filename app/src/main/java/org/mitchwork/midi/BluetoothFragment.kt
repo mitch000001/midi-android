@@ -68,7 +68,8 @@ class BluetoothFragment : Fragment() {
 
         listAdapter = BluetoothDeviceAdapter(object : BluetoothDeviceAdapter.OnBluetoothSelectedListener{
             override fun onBluetoothResultSelected(result: ScanResult) {
-                // TODO: handle selection
+                val direction = BluetoothFragmentDirections.actionSelectBluetoothDevice(result)
+                findNavController().navigate(direction)
             }
         })
         viewBinding.bluetoothList.adapter = listAdapter

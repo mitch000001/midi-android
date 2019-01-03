@@ -33,4 +33,6 @@
     <string name="why_btle_location">Location permission is needed to scan for Bluetooth LE devices</string>
     <string name="bluetooth_is_required">Bluetooth needs to be enabled to scan for devices</string>
     <string name="open_midi_device_failed">Opening the Midi device failed</string>
+    <string name="no_midi_devices">No connected midi devices found</string>
+    <string name="available_midi_devices">Available Midi devices</string>
 </resources>
