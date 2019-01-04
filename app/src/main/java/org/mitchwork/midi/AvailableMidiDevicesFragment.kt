@@ -47,7 +47,6 @@ class AvailableMidiDevicesFragment : Fragment() {
 
         viewBinding.midiDeviceList.adapter = adapter
 
-
         viewModel.availableDevices.observe(this, Observer {
             val hasDevices = it != null && it.isNotEmpty()
             viewBinding.hasDevices = hasDevices
@@ -62,11 +61,13 @@ class AvailableMidiDevicesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val bundle = AvailableMidiDevicesFragmentArgs.fromBundle(arguments!!)
-        val scanResult = bundle.bluetoothResult
+        if (arguments != null) {
+            val bundle = AvailableMidiDevicesFragmentArgs.fromBundle(arguments!!)
+            val scanResult = bundle.bluetoothResult
 
-        if (scanResult != null) {
-            viewModel.addBluetoothResult(scanResult)
+            if (scanResult != null) {
+                viewModel.addBluetoothResult(scanResult)
+            }
         }
     }
 }
