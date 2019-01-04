@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
+import android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -75,13 +77,22 @@ class BluetoothFragment : Fragment() {
         viewBinding.bluetoothList.adapter = listAdapter
 
         viewBinding.clickListener = View.OnClickListener {
-            if (bluetoothAdapter.isDisabled) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            } else {
-                startScanningIfPermitted()
-            }
+            startScanningOrEnableBluetooth()
         }
+    }
+
+    private fun startScanningOrEnableBluetooth() {
+        if (bluetoothAdapter.isDisabled) {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        } else {
+            startScanningIfPermitted()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        startScanningOrEnableBluetooth()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -143,7 +154,7 @@ class BluetoothFragment : Fragment() {
         handler.postDelayed({
             scanner?.stopScan(scanCallback)
         }, SCAN_PERIOD)
-        scanner.startScan(filters, null, scanCallback)
+        scanner.startScan(filters, ScanSettings.Builder().setCallbackType(CALLBACK_TYPE_ALL_MATCHES).build(), scanCallback)
     }
 
     companion object {
