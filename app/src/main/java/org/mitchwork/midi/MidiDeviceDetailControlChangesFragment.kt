@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import org.mitchwork.midi.adapters.ControlChangeAdapter
 import org.mitchwork.midi.data.AppDatabase
-import org.mitchwork.midi.data.ControlChange
+import org.mitchwork.midi.data.ControlChangeWithMidiChannel
 import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentMidiDeviceDetailControlChangesBinding
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModel
@@ -30,7 +30,11 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewBinding = FragmentMidiDeviceDetailControlChangesBinding.inflate(inflater, container, false)
+        return viewBinding.root
+    }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
 
         val midiManager: MidiManager = requireContext().getSystemService(Context.MIDI_SERVICE) as MidiManager
@@ -40,19 +44,18 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
 
-        listAdapter = ControlChangeAdapter(object : ControlChangeAdapter.OnControlChangeValueChangedListener{
-            override fun onControlChangeValueChange(view: SeekBar, item: ControlChange) {
-                // TODO: update midi device
-            }
+        listAdapter = ControlChangeAdapter(object : ControlChangeAdapter.OnControlChangeValueChangedListener {
+            override fun onControlChangeValueChange(view: SeekBar, item: ControlChangeWithMidiChannel) {}
 
-            override fun onControlChangeValueChanged(view: SeekBar, item: ControlChange) {
-                viewModel.updateControlChange(item)
+            override fun onControlChangeValueChanged(view: SeekBar, item: ControlChangeWithMidiChannel) {
+                viewModel.updateControlChange(item.controlChange)
             }
         })
         viewBinding.midiDeviceControlChanges.adapter = listAdapter
 
         viewBinding.midiDeviceAddBindings.setOnClickListener {
-            val direction = MidiDeviceDetailFragmentDirections.actionMidiDeviceDetailFragmentToContolChangeEditFragment(deviceID)
+            val direction =
+                MidiDeviceDetailFragmentDirections.actionMidiDeviceDetailFragmentToContolChangeEditFragment(deviceID)
             it.findNavController().navigate(direction)
         }
 
@@ -62,7 +65,6 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
             if (hasControlChanges)
                 listAdapter.submitList(controlChanges)
         })
-        return viewBinding.root
     }
 
 }

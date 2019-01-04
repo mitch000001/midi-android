@@ -5,15 +5,28 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import org.mitchwork.midi.data.ControlChange
+import org.mitchwork.midi.data.ControlChangeWithMidiChannel
 import org.mitchwork.midi.databinding.ControlChangeItemBinding
 
 class ControlChangeAdapter(
     private val onControlChangeValueChangedListener: OnControlChangeValueChangedListener
-): ListAdapter<ControlChange, ControlChangeAdapter.ViewHolder>(ControlChangeDiffCallback()) {
+): ListAdapter<ControlChangeWithMidiChannel, ControlChangeAdapter.ViewHolder>(ControlChangeDiffCallback()) {
     interface OnControlChangeValueChangedListener {
-        fun onControlChangeValueChanged(view: SeekBar, item: ControlChange)
-        fun onControlChangeValueChange(view: SeekBar, item: ControlChange)
+        fun onControlChangeValueChanged(view: SeekBar, item: ControlChangeWithMidiChannel)
+        fun onControlChangeValueChange(view: SeekBar, item: ControlChangeWithMidiChannel)
+    }
+
+    private var onControlChangeValueChangedListeners: List<OnControlChangeValueChangedListener>
+    init {
+        onControlChangeValueChangedListeners = arrayListOf(onControlChangeValueChangedListener)
+    }
+
+    fun addOnControlChangeChangeValueListener(listener: OnControlChangeValueChangedListener) {
+        onControlChangeValueChangedListeners += listener
+    }
+
+    fun removeOnControlChangeChangeValueListener(listener: OnControlChangeValueChangedListener) {
+        onControlChangeValueChangedListeners = onControlChangeValueChangedListeners.filterNot { it == listener }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +39,7 @@ class ControlChangeAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val change = getItem(position)
         holder.apply {
-            bind(onControlChangeValueChangedListener, change)
+            bind(onControlChangeValueChangedListeners, change)
             itemView.tag = change
         }
     }
@@ -34,21 +47,25 @@ class ControlChangeAdapter(
     class ViewHolder(
         val binding: ControlChangeItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(onChangedListener: OnControlChangeValueChangedListener, item: ControlChange) {
+        fun bind(onChangeListeners: List<OnControlChangeValueChangedListener>, item: ControlChangeWithMidiChannel) {
             with(binding) {
-                controlChange = item
+                controlChange = item.controlChange
                 binding.valueSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {
                         if (seekBar == null) return
-                        onChangedListener.onControlChangeValueChanged(seekBar, item)
+                        for (listener in onChangeListeners) {
+                            listener.onControlChangeValueChanged(seekBar, item)
+                        }
                     }
 
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                         if (seekBar == null) return
-                        item.value = progress
-                        onChangedListener.onControlChangeValueChange(seekBar, item)
+                        item.controlChange.value = progress
+                        for (listener in onChangeListeners) {
+                            listener.onControlChangeValueChange(seekBar, item)
+                        }
                     }
                 })
                 executePendingBindings()

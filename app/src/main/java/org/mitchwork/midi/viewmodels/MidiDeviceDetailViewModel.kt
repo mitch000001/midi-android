@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.mitchwork.midi.data.ControlChange
+import org.mitchwork.midi.data.ControlChangeWithMidiChannel
 import org.mitchwork.midi.data.MidiDevice
 import org.mitchwork.midi.data.MidiDeviceRepository
 import java.util.*
@@ -16,7 +17,7 @@ class MidiDeviceDetailViewModel internal constructor(
     private val deviceID: String
 )  : ViewModel() {
     val device: LiveData<MidiDevice> = midiDeviceRepository.getDeviceByID(deviceID)
-    val controlChanges: LiveData<List<ControlChange>> = midiDeviceRepository.getControlChangesForMidiDevice(deviceID)
+    val controlChanges: LiveData<List<ControlChangeWithMidiChannel>> = midiDeviceRepository.getControlChangesForMidiDevice(deviceID)
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(Dispatchers.Main + viewModelJob)

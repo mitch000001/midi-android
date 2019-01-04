@@ -23,7 +23,7 @@ class MidiDeviceRepository private constructor(
         return midiDeviceDao.getDeviceByID(id)
     }
 
-    fun getControlChangesForMidiDevice(deviceID: String): LiveData<List<ControlChange>> {
+    fun getControlChangesForMidiDevice(deviceID: String): LiveData<List<ControlChangeWithMidiChannel>> {
         return controlChangeDao.getAllForMidiDevice(deviceID)
     }
 
