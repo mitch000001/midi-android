@@ -27,6 +27,10 @@ class AvailableMidiDevices(
         }
     }
 
+    fun refresh() {
+        value = value?.union(midiManager.devices.map { it -> MidiDeviceTracker(it, null) })?.toList()
+    }
+
     fun addBluetoothDevice(scanResult: ScanResult) {
         value = value?.plus(MidiDeviceTracker(null, scanResult))
     }

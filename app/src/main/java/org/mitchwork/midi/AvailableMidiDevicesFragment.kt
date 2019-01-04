@@ -56,6 +56,7 @@ class AvailableMidiDevicesFragment : Fragment() {
             }
         })
 
+        viewBinding.clickListener = View.OnClickListener { viewModel.refreshDevices() }
     }
 
     override fun onResume() {
