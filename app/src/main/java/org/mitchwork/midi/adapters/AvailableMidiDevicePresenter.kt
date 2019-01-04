@@ -14,7 +14,7 @@ class AvailableMidiDevicePresenter(private val device: MidiDeviceTracker) {
         get() {
             if (device.midiDevice != null) {
                 if (device.midiDevice.inputPortCount != 0) {
-                    return "Input ports:\n" + (device.midiDevice?.ports
+                    return "Input ports:\n" + (device.midiDevice.ports
                         ?.filter { it.type == MidiDeviceInfo.PortInfo.TYPE_INPUT }
                         ?.map { it -> run {
                             if (it.name != "") {
@@ -31,7 +31,7 @@ class AvailableMidiDevicePresenter(private val device: MidiDeviceTracker) {
         get() {
             if (device.midiDevice != null) {
                 if (device.midiDevice.outputPortCount != 0) {
-                    return "Output ports:\n" + (device.midiDevice?.ports
+                    return "Output ports:\n" + (device.midiDevice.ports
                         ?.filter { it.type == MidiDeviceInfo.PortInfo.TYPE_OUTPUT }
                         ?.map { it -> run {
                             if (it.name != "") {
@@ -44,4 +44,5 @@ class AvailableMidiDevicePresenter(private val device: MidiDeviceTracker) {
             }
             return "Output ports: -"
         }
+    val isBluetoothDevice = device.bluetoothDevice != null
 }

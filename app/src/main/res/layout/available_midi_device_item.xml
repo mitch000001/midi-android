@@ -19,6 +19,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
+            <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@{device.isBluetoothDevice ? @drawable/ic_bluetooth_searching : @drawable/ic_sysex}"
+                    tools:srcCompat="@drawable/ic_bluetooth_searching" android:cropToPadding="false"
+                    android:adjustViewBounds="false" android:scaleType="center"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
