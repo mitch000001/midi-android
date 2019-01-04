@@ -1,10 +1,7 @@
 package org.mitchwork.midi.viewmodels
 
 import android.bluetooth.le.ScanResult
-import android.media.midi.MidiDevice
-import android.media.midi.MidiDeviceInfo
-import android.media.midi.MidiInputPort
-import android.media.midi.MidiManager
+import android.media.midi.*
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
@@ -17,9 +14,11 @@ class AvailableMidiDevicesViewModel(private val midiManager: MidiManager) : View
 
     fun refreshDevices() = availableDevices.refresh()
 
-    var midiDevice: MediatorLiveData<MidiDevice> = MediatorLiveData()
+    val midiDevice: MediatorLiveData<MidiDevice> = MediatorLiveData()
 
-    var midiInputPort: MediatorLiveData<MidiInputPort> = MediatorLiveData()
+    val midiInputPort: MediatorLiveData<MidiInputPort> = MediatorLiveData()
+
+    val midiOutputPort: MediatorLiveData<MidiOutputPort> = MediatorLiveData()
 
     fun addBluetoothResult(scanResult: ScanResult) = availableDevices.addBluetoothDevice(scanResult)
 
@@ -46,20 +45,37 @@ class AvailableMidiDevicesViewModel(private val midiManager: MidiManager) : View
         }
     }
 
-    class MidiDeviceLiveData(midiManager: MidiManager, device: MidiDeviceTracker) : LiveData<MidiDevice>() {
+    fun openFirstOutputPort() {
+        if (midiOutputPort.value != null) {
+            return
+        }
+        if (midiOutputPort.value == null) {
+            midiOutputPort.removeSource(midiDevice)
+        }
+        midiOutputPort.addSource(midiDevice) {
+                device ->
+            val portNumber =
+                device.info.ports.find { it.type == MidiDeviceInfo.PortInfo.TYPE_OUTPUT }?.portNumber ?: -1
+            if (portNumber != -1) {
+                midiOutputPort.value = device.openOutputPort(portNumber)
+            }
+        }
+    }
+
+    class MidiDeviceLiveData(midiManager: MidiManager, deviceTracker: MidiDeviceTracker) : LiveData<MidiDevice>() {
         init {
             val handler = Handler(Looper.getMainLooper())
-            if (device.midiDevice != null) {
+            if (deviceTracker.midiDevice != null) {
                 midiManager.openDevice(
-                    device.midiDevice,
+                    deviceTracker.midiDevice,
                     { device ->
                         value?.close()
                         value = device
                     }, handler
                 )
-            } else if (device.bluetoothDevice != null) {
+            } else if (deviceTracker.bluetoothDevice != null) {
                 midiManager.openBluetoothDevice(
-                    device.bluetoothDevice.device,
+                    deviceTracker.bluetoothDevice.device,
                     { device ->
                         value?.close()
                         value = device
@@ -72,6 +88,6 @@ class AvailableMidiDevicesViewModel(private val midiManager: MidiManager) : View
 
     override fun onCleared() {
         super.onCleared()
-        midiDevice?.value?.close()
+        midiDevice.value?.close()
     }
 }

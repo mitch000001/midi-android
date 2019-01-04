@@ -19,6 +19,7 @@ import org.mitchwork.midi.data.ControlChangeWithMidiChannel
 import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentMidiDeviceDetailControlChangesBinding
 import org.mitchwork.midi.messages.ControlChangeMessage
+import org.mitchwork.midi.messages.MidiMessageParser
 import org.mitchwork.midi.viewmodels.AvailableMidiDevicesViewModel
 import org.mitchwork.midi.viewmodels.AvailableMidiDevicesViewModelFactory
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModel
@@ -69,22 +70,33 @@ class MidiDeviceDetailControlChangesFragment : Fragment() {
             it.findNavController().navigate(direction)
         }
 
-        activityViewModel.midiDevice?.observe(viewLifecycleOwner, Observer { midiDevice ->
+        activityViewModel.midiDevice.observe(viewLifecycleOwner, Observer { midiDevice ->
             Log.i("MIDI", "Midi device open: $midiDevice")
             if (midiDevice.info.inputPortCount != 0) {
                 activityViewModel.openFirstInputPort()
             } else {
                 Log.w("MIDI", "device has no input port: ${midiDevice.info.ports}")
             }
+            if (midiDevice.info.outputPortCount != 0) {
+                activityViewModel.openFirstOutputPort()
+            } else {
+                Log.w("MIDI", "device has no output port: ${midiDevice.info.ports}")
+            }
         })
 
-        activityViewModel.midiInputPort?.observe(viewLifecycleOwner, MidiInputPortObserver(listAdapter))
+        val messageParser = MidiMessageParser()
+
+        activityViewModel.midiInputPort.observe(viewLifecycleOwner, MidiInputPortObserver(listAdapter))
+        activityViewModel.midiOutputPort.observe(viewLifecycleOwner, Observer { midiOutputPort ->
+            midiOutputPort.connect(messageParser)
+        })
 
         viewModel.controlChanges.observe(viewLifecycleOwner, Observer { controlChanges ->
             val hasControlChanges = (controlChanges != null && controlChanges.isNotEmpty())
             viewBinding.hasControlChanges = hasControlChanges
-            if (hasControlChanges)
+            if (hasControlChanges) {
                 listAdapter.submitList(controlChanges)
+            }
         })
     }
 
