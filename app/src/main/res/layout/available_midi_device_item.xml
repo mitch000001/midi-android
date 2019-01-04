@@ -8,8 +8,8 @@
     </data>
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="clickListener"
+            android:layout_height="wrap_content"
+            android:onClick="@{clickListener}"
             app:cardUseCompatPadding="true"
             app:cardCornerRadius="8dp"
             app:contentPadding="@dimen/card_item_padding"
