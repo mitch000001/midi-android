@@ -1,7 +1,5 @@
 package org.mitchwork.midi.messages
 
-import kotlin.experimental.and
-
 enum class MidiStatusBytes(val value: Byte) {
     // Channel Voice Messages
     NOTE_OFF(0b10000000.toByte()),
@@ -26,7 +24,9 @@ enum class MidiStatusBytes(val value: Byte) {
     CONTINUE(0b11111011.toByte()),
     STOP(0b11111100.toByte()),
     ACTIVE_SENSING(0b11111110.toByte()),
-    RESET(0b11111111.toByte());
+    RESET(0b11111111.toByte()),
+
+    UNKNOWN(0b00000000.toByte());
 
     fun isChannelVoiceMessage(): Boolean = value < CHANNEL_MODE.value
     fun isChannelModeMessage(): Boolean = value >= CHANNEL_MODE.value && value < SYSTEM_EXCLUSIVE.value
@@ -36,10 +36,11 @@ enum class MidiStatusBytes(val value: Byte) {
     companion object {
         fun fromByte(b: Byte): MidiStatusBytes {
             if (b < SYSTEM_EXCLUSIVE.value) {
-                val withoutChannel = b and 0b00000000
-                return values().first { midiStatusBytes -> midiStatusBytes.value == withoutChannel }
+                val midiChannel = b.toUByte().rem(0b00010000.toUByte())
+                val withoutChannel = b.minus(midiChannel.toByte()).toByte()
+                return values().find { midiStatusBytes -> midiStatusBytes.value == withoutChannel } ?: UNKNOWN
             }
-            return values().first {midiStatusBytes -> midiStatusBytes.value == b }
+            return values().find {midiStatusBytes -> midiStatusBytes.value == b } ?: UNKNOWN
         }
     }
 }

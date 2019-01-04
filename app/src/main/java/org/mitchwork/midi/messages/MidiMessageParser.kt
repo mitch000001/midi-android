@@ -20,7 +20,7 @@ class MidiMessageParser() : MidiReceiver() {
 
     override fun onSend(msg: ByteArray?, offset: Int, count: Int, timestamp: Long) {
         if (msg == null) return
-        val message = msg.clone()
+        val message = msg.sliceArray(offset until offset+count)
         input += message
         parse()
     }
@@ -30,6 +30,7 @@ class MidiMessageParser() : MidiReceiver() {
             val n = next()
             val status = MidiStatusBytes.fromByte(n)
             when (status) {
+                MidiStatusBytes.UNKNOWN -> {}
                 MidiStatusBytes.CONTROL_CHANGE -> {
                     parseControlChange(n)
                 }
@@ -39,7 +40,7 @@ class MidiMessageParser() : MidiReceiver() {
     }
 
     private fun parseControlChange(byte: Byte) {
-        val midiChannel = byte.minus(MidiStatusBytes.CONTROL_CHANGE.value)
+        val midiChannel = byte.minus(MidiStatusBytes.CONTROL_CHANGE.value) + 1
         val controllerNumber = next()
         val controllerValue = next()
         val cc =  ControlChangeMessage(midiChannel, controllerNumber.toInt(), controllerValue.toInt())
