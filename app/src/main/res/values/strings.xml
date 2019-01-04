@@ -4,6 +4,7 @@
     <string name="midi_device_name">midi device name</string>
     <string name="navigation_drawer_header_content_description">header image</string>
     <string name="navigation_drawer_header_title">Midi Controller</string>
+    <string name="navigation_drawer_header_subtitle">Connected devices: %s</string>
     <string name="create_mididevice_header">Create new MidiDevice</string>
     <string name="midi_device_name_placeholder">Device name</string>
     <string name="midi_device_channel_placeholder">Midi channel</string>

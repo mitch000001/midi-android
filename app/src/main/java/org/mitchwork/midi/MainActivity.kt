@@ -1,13 +1,20 @@
 package org.mitchwork.midi
 
+import android.content.Context
 import android.content.pm.PackageManager
+import android.media.midi.MidiDeviceInfo.PROPERTY_NAME
+import android.media.midi.MidiManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,6 +23,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import org.mitchwork.midi.databinding.ActivityMainBinding
+import org.mitchwork.midi.viewmodels.AvailableMidiDevicesViewModel
+import org.mitchwork.midi.viewmodels.AvailableMidiDevicesViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private var isBluetoothSupported: Boolean = false
     private var isMidiSupported: Boolean = false
+
+    private lateinit var activityViewModel: AvailableMidiDevicesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +86,26 @@ class MainActivity : AppCompatActivity() {
         }
         navigationView.menu.findItem(R.id.nav_bluetooth).isVisible = isBluetoothSupported
         navigationView.menu.findItem(R.id.nav_midi_devices).isVisible = isMidiSupported
+
+        val midiManager: MidiManager = getSystemService(Context.MIDI_SERVICE) as MidiManager
+        activityViewModel = ViewModelProviders.of(
+            this, AvailableMidiDevicesViewModelFactory(midiManager)
+        ).get(AvailableMidiDevicesViewModel::class.java)
+
+        activityViewModel.midiDevice.observe(this, Observer {
+            val subHeader = navigationView.findViewById<TextView>(R.id.nav_header_subtitle)
+            if (it == null) {
+                subHeader?.visibility = View.GONE
+                subHeader?.text = ""
+            } else {
+                subHeader?.visibility = View.VISIBLE
+                subHeader?.text =
+                        getString(
+                            R.string.navigation_drawer_header_subtitle,
+                            it.info.properties.getString(PROPERTY_NAME)
+                        )
+            }
+        })
     }
 
 
