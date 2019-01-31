@@ -58,7 +58,7 @@
               tools:layout="@layout/fragment_settings"
     />
     <fragment android:id="@+id/contolChangeEditFragment"
-              android:name="org.mitchwork.midi.ContolChangeEditFragment"
+              android:name="org.mitchwork.midi.ControlChangeEditFragment"
               android:label="fragment_contol_change_edit"
               tools:layout="@layout/fragment_control_change_edit">
         <argument

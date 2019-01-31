@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -20,7 +20,7 @@ import org.mitchwork.midi.databinding.FragmentControlChangeEditBinding
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModel
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModelFactory
 
-class ContolChangeEditFragment : Fragment() {
+class ControlChangeEditFragment : DialogFragment() {
 
     private lateinit var viewModel: MidiDeviceDetailViewModel
     private lateinit var viewBinding: FragmentControlChangeEditBinding
@@ -48,7 +48,7 @@ class ContolChangeEditFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
 
-        val direction = ContolChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(deviceID)
+        val direction = ControlChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(deviceID)
 
         viewBinding.cancelClickListener = View.OnClickListener {
             it.findNavController().popBackStack()
