@@ -1,6 +1,7 @@
 package org.mitchwork.midi.messages
 
 import android.media.midi.MidiReceiver
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 
@@ -8,19 +9,26 @@ interface ControlChangeListener {
     fun onControlChangeMessage(cc: ControlChangeMessage)
 }
 
-class MidiMessageParser() : MidiReceiver() {
+class MidiMessageParser : MidiReceiver() {
 
     private var input: ByteArray = ByteArray(0)
     private val controlChangeMessages: ObservableList<ControlChangeMessage> = ObservableArrayList()
-    private val controlChangeMessageListener: List<ControlChangeListener> = ArrayList()
+    private var controlChangeMessageListener: List<ControlChangeListener> = ArrayList()
 
     init {
         controlChangeMessages.addOnListChangedCallback(ControlChangeMessageChangedCallback(controlChangeMessageListener))
     }
 
+    fun addControlChangeMessageListener(listener: ControlChangeListener) {
+        controlChangeMessageListener += listener
+    }
+
     override fun onSend(msg: ByteArray?, offset: Int, count: Int, timestamp: Long) {
         if (msg == null) return
         val message = msg.sliceArray(offset until offset+count)
+        Log.e("MIDI", "Received bytes: ${message.toList().joinToString(" "){ it -> String.format("%02X", it) } }")
+        Log.e("MIDI", "Received bytes: ${message.toList().joinToString(" "){ it -> it.toUByte().toString(radix = 2) } }")
+        Log.e("MIDI", "ControlChange: ${MidiStatusBytes.CONTROL_CHANGE.value}")
         input += message
         parse()
     }

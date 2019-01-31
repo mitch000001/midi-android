@@ -28,7 +28,9 @@ abstract class AppDatabase : RoomDatabase() {
                 instance = Room.databaseBuilder(
                     applicationContext,
                     AppDatabase::class.java, "midi_db"
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
             }
             return instance!!
         }

@@ -15,7 +15,11 @@ import androidx.room.ForeignKey.CASCADE
     indices = [Index("midi_device_id")]
 )
 data class ProgramChange(
-    @PrimaryKey var uid: String,
-    @ColumnInfo(name = "value") var value: Int,
-    @ColumnInfo(name = "midi_device_id") var midiDeviceID: String
-)
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "value") var value: Int
+){
+    @PrimaryKey var uid: String = ""
+    @ColumnInfo(name = "midi_device_id") var midiDeviceID: String = ""
+
+    fun display(): String = "$name (PC# $value)"
+}

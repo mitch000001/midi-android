@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/action_control_change"
+            android:title="@string/midi_device_details_tab_control_changes"
+            android:icon="@drawable/ic_baseline_tune_24px"
+            android:tint="@color/colorPrimaryDark"
+    />
+    <item
+            android:id="@+id/action_program_change"
+            android:title="@string/midi_device_details_tab_program_changes"
+            android:icon="@drawable/ic_baseline_save_24px"
+            android:tint="@color/colorPrimaryDark"
+    />
+    <item
+            android:id="@+id/action_sysex"
+            android:title="@string/midi_device_details_tab_sysex"
+            android:icon="@drawable/ic_baseline_insert_drive_file_24px"
+            android:tint="@color/colorPrimaryDark"
+    />
+</menu>

@@ -3,7 +3,6 @@ package org.mitchwork.midi.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import org.mitchwork.midi.data.MidiDeviceTracker
@@ -36,7 +35,7 @@ class AvailableMidiDeviceAdapter(
         onDeviceClickedListener.onDeviceClicked(it, device)
     }
 
-    class ViewHolder(val binding: AvailableMidiDeviceItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: AvailableMidiDeviceItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(clickListener: View.OnClickListener, device: AvailableMidiDevicePresenter) {
             with(binding) {
                 this.device = device
@@ -44,15 +43,5 @@ class AvailableMidiDeviceAdapter(
                 executePendingBindings()
             }
         }
-    }
-}
-
-class MidiDeviceTrackerDiffCallback : DiffUtil.ItemCallback<MidiDeviceTracker>() {
-    override fun areItemsTheSame(oldItem: MidiDeviceTracker, newItem: MidiDeviceTracker): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: MidiDeviceTracker, newItem: MidiDeviceTracker): Boolean {
-        return oldItem == newItem
     }
 }

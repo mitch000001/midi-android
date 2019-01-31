@@ -66,7 +66,7 @@ class ContolChangeEditFragment : Fragment() {
 
             viewModel.saveControlChange(cc)
 
-            Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_SHORT).show()
             it.findNavController().navigate(direction)
         }
         viewBinding.executePendingBindings()

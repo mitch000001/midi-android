@@ -22,5 +22,5 @@ data class ControlChange(
     @PrimaryKey var uid: String = ""
     @ColumnInfo(name = "midi_device_id") var midiDeviceID: String = ""
 
-    fun display(): String = "$name ($controllerNumber)"
+    fun display(): String = "$name (CC# $controllerNumber)"
 }

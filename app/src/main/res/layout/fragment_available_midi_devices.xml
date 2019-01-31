@@ -6,53 +6,45 @@
         <variable name="hasDevices" type="boolean"/>
         <variable name="clickListener" type="android.view.View.OnClickListener"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".AvailableMidiDevicesFragment"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
         >
-            <FrameLayout
-                    android:id="@+id/frame"
+        <FrameLayout
+                android:id="@+id/frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_anchorGravity="center">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/midi_device_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layout_anchorGravity="center">
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/midi_device_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/list_padding"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:isGone="@{!hasDevices}"
-                        tools:listitem="@layout/available_midi_device_item"/>
-                <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/empty_devices"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textAlignment="center"
-                        android:text="@string/no_midi_devices"
-                        app:isGone="@{hasDevices}"
-                />
-            </FrameLayout>
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:padding="@dimen/list_padding"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:isGone="@{!hasDevices}"
+                    tools:listitem="@layout/available_midi_device_item"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/empty_devices"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_refresh"
-                    android:onClick="@{clickListener}"
-                    app:useCompatPadding="true"
-                    app:layout_anchor="@id/frame"
-                    app:layout_anchorGravity="bottom|end"
-                    app:backgroundTint="@color/design_default_color_secondary"
-                    app:backgroundTintMode="src_over"
-                    app:rippleColor="@color/design_default_color_secondary_variant"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:text="@string/no_midi_devices"
+                    app:isGone="@{hasDevices}"
             />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/refresh_devices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_refresh"
+                android:onClick="@{clickListener}"
+                app:useCompatPadding="true"
+                app:layout_anchor="@id/frame"
+                app:layout_anchorGravity="bottom|end"
+                app:backgroundTint="@color/design_default_color_secondary"
+                app:backgroundTintMode="src_over"
+                app:rippleColor="@color/design_default_color_secondary_variant"
+        />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
