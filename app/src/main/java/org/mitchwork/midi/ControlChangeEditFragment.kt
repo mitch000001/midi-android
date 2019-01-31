@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.media.midi.MidiManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import org.mitchwork.midi.data.AppDatabase
 import org.mitchwork.midi.data.ControlChange
@@ -30,6 +28,7 @@ class ControlChangeEditFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewBinding = FragmentControlChangeEditBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return viewBinding.root
     }
 
@@ -37,7 +36,10 @@ class ControlChangeEditFragment : DialogFragment() {
         super.onActivityCreated(savedInstanceState)
 
         val activity = requireActivity() as AppCompatActivity
-        activity.supportActionBar?.setTitle(R.string.create_cc_header)
+        activity.supportActionBar?.apply {
+            setTitle(R.string.create_cc_header)
+            setHomeAsUpIndicator(R.drawable.ic_baseline_clear_24px)
+        }
 
         val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
 
@@ -48,14 +50,17 @@ class ControlChangeEditFragment : DialogFragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
 
-        val direction = ControlChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(deviceID)
+        viewBinding.executePendingBindings()
+    }
 
-        viewBinding.cancelClickListener = View.OnClickListener {
-            it.findNavController().popBackStack()
-        }
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.control_change_edit, menu)
+    }
 
-        viewBinding.saveClickListener = View.OnClickListener {
-            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_save -> {
+            val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
             val name = viewBinding.name.text.toString()
@@ -63,13 +68,20 @@ class ControlChangeEditFragment : DialogFragment() {
             val controllerValue = viewBinding.controllerValue.text.toString().toInt()
 
             val cc = ControlChange(name, controllerNumber, controllerValue)
-
             viewModel.saveControlChange(cc)
 
-            Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_SHORT).show()
-            it.findNavController().navigate(direction)
-        }
-        viewBinding.executePendingBindings()
-    }
+            val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
+            val direction = ControlChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(deviceID)
 
+            Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_SHORT).show()
+            findNavController().navigate(direction)
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
 }

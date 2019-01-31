@@ -5,14 +5,13 @@ import android.app.Activity
 import android.content.Context
 import android.media.midi.MidiManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import org.mitchwork.midi.data.AppDatabase
 import org.mitchwork.midi.data.MidiDeviceRepository
@@ -26,7 +25,7 @@ import org.mitchwork.midi.viewmodels.MidiDeviceEditViewModelFactory
  * A simple [Fragment] subclass.
  *
  */
-class MidiDeviceEditFragment : Fragment() {
+class MidiDeviceEditFragment : DialogFragment() {
 
     private lateinit var viewModel: MidiDeviceEditViewModel
     private lateinit var viewBinding: FragmentMidiDeviceEditBinding
@@ -36,9 +35,7 @@ class MidiDeviceEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewBinding = FragmentMidiDeviceEditBinding.inflate(inflater, container, false)
-
-        viewBinding.setLifecycleOwner(this@MidiDeviceEditFragment)
-
+        setHasOptionsMenu(true)
         return viewBinding.root
     }
 
@@ -46,8 +43,10 @@ class MidiDeviceEditFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val activity = requireActivity() as AppCompatActivity
-        activity.supportActionBar?.setTitle(R.string.create_mididevice_header)
-
+        activity.supportActionBar?.apply {
+            setTitle(R.string.create_mididevice_header)
+            setHomeAsUpIndicator(R.drawable.ic_baseline_clear_24px)
+        }
         val midiManager: MidiManager = requireContext().getSystemService(Context.MIDI_SERVICE) as MidiManager
 
         val db = AppDatabase.getInstance(requireContext())
@@ -55,11 +54,16 @@ class MidiDeviceEditFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, MidiDeviceEditViewModelFactory(repository)).get(MidiDeviceEditViewModel::class.java)
         viewBinding.device = viewModel
-        viewBinding.cancelClickListener = View.OnClickListener {
-            it.findNavController().popBackStack()
-        }
-        viewBinding.saveClickListener = View.OnClickListener {
-            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.midi_device_edit, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_save -> {
+            val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
             viewModel.name.value = viewBinding.midiDeviceEditName.text.toString()
@@ -68,8 +72,14 @@ class MidiDeviceEditFragment : Fragment() {
 
             Snackbar.make(view!!, "created new device", Snackbar.LENGTH_LONG).show()
             val direction = MidiDeviceEditFragmentDirections.actionMidiDeviceEditFragmentToMidiDeviceListFragment()
-            it.findNavController().navigate(direction)
+            findNavController().navigate(direction)
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
         }
     }
-
 }
