@@ -42,7 +42,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords"
                         android:ems="10"
-                />
+                        android:imeOptions="actionNext"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/controller_number_layout"
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:inputType="numberSigned"
-                />
+                        android:imeOptions="actionNext"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/controller_value_layout"
@@ -80,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:inputType="numberSigned"
-                />
+                        android:imeOptions="actionDone"/>
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
