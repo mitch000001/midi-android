@@ -17,11 +17,14 @@ import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentControlChangeEditBinding
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModel
 import org.mitchwork.midi.viewmodels.MidiDeviceDetailViewModelFactory
+import org.mitchwork.midi.views.BlankValidator
+import org.mitchwork.midi.views.Form
 
 class ControlChangeEditFragment : DialogFragment() {
 
     private lateinit var viewModel: MidiDeviceDetailViewModel
     private lateinit var viewBinding: FragmentControlChangeEditBinding
+    private lateinit var form: Form
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,33 +52,43 @@ class ControlChangeEditFragment : DialogFragment() {
         val factory = MidiDeviceDetailViewModelFactory(repository, deviceID)
 
         viewModel = ViewModelProviders.of(this, factory).get(MidiDeviceDetailViewModel::class.java)
-
+        form = Form()
+        form.addValidator(BlankValidator(activity, viewBinding.name))
+        form.addValidator(BlankValidator(activity, viewBinding.controllerNumber))
+        form.addValidator(BlankValidator(activity, viewBinding.controllerValue))
         viewBinding.executePendingBindings()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.control_change_edit, menu)
+        inflater.inflate(R.menu.control_change_edit, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
-            val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            if (form.validate()) {
+                val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
-            val name = viewBinding.name.text.toString()
-            val controllerNumber = viewBinding.controllerNumber.text.toString().toInt()
-            val controllerValue = viewBinding.controllerValue.text.toString().toInt()
+                val name = viewBinding.name.text.toString()
+                val controllerNumber = viewBinding.controllerNumber.text.toString().toInt()
+                val controllerValue = viewBinding.controllerValue.text.toString().toInt()
 
-            val cc = ControlChange(name, controllerNumber, controllerValue)
-            viewModel.saveControlChange(cc)
+                val cc = ControlChange(name, controllerNumber, controllerValue)
+                viewModel.saveControlChange(cc)
 
-            val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
-            val direction = ControlChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(deviceID)
+                val deviceID = MidiDeviceDetailFragmentArgs.fromBundle(arguments!!).deviceID
+                val direction =
+                    ControlChangeEditFragmentDirections.actionContolChangeEditFragmentToMidiDeviceDetailFragment(
+                        deviceID
+                    )
 
-            Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_SHORT).show()
-            findNavController().navigate(direction)
-            true
+                Snackbar.make(view!!, "ControlChange created", Snackbar.LENGTH_SHORT).show()
+                findNavController().navigate(direction)
+                true
+            } else {
+                false
+            }
         }
 
         else -> {

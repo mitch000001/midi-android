@@ -18,7 +18,8 @@ import org.mitchwork.midi.data.MidiDeviceRepository
 import org.mitchwork.midi.databinding.FragmentMidiDeviceEditBinding
 import org.mitchwork.midi.viewmodels.MidiDeviceEditViewModel
 import org.mitchwork.midi.viewmodels.MidiDeviceEditViewModelFactory
-
+import org.mitchwork.midi.views.BlankValidator
+import org.mitchwork.midi.views.Form
 
 
 /**
@@ -29,6 +30,7 @@ class MidiDeviceEditFragment : DialogFragment() {
 
     private lateinit var viewModel: MidiDeviceEditViewModel
     private lateinit var viewBinding: FragmentMidiDeviceEditBinding
+    private lateinit var form: Form
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,28 +54,38 @@ class MidiDeviceEditFragment : DialogFragment() {
         val db = AppDatabase.getInstance(requireContext())
         val repository = MidiDeviceRepository.getInstance(db.midiDeviceDao(), db.controlChangeDao(), midiManager)
 
-        viewModel = ViewModelProviders.of(this, MidiDeviceEditViewModelFactory(repository)).get(MidiDeviceEditViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, MidiDeviceEditViewModelFactory(repository))
+            .get(MidiDeviceEditViewModel::class.java)
         viewBinding.device = viewModel
+
+        form = Form()
+        form.addValidator(BlankValidator(activity, viewBinding.midiDeviceEditName))
+        form.addValidator(BlankValidator(activity, viewBinding.midiDeviceEditMidiChannel))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.midi_device_edit, menu)
+        inflater.inflate(R.menu.midi_device_edit, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_save -> {
-            val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+            if (form.validate()) {
+                val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
-            viewModel.name.value = viewBinding.midiDeviceEditName.text.toString()
-            viewModel.midiChannel.value = viewBinding.midiDeviceEditMidiChannel.text.toString().toInt()
-            viewModel.save()
+                viewModel.name.value = viewBinding.midiDeviceEditName.text.toString()
+                viewModel.midiChannel.value = viewBinding.midiDeviceEditMidiChannel.text.toString().toInt()
+                viewModel.save()
 
-            Snackbar.make(view!!, "created new device", Snackbar.LENGTH_LONG).show()
-            val direction = MidiDeviceEditFragmentDirections.actionMidiDeviceEditFragmentToMidiDeviceListFragment()
-            findNavController().navigate(direction)
-            true
+                Snackbar.make(view!!, "created new device", Snackbar.LENGTH_LONG).show()
+                val direction = MidiDeviceEditFragmentDirections.actionMidiDeviceEditFragmentToMidiDeviceListFragment()
+                findNavController().navigate(direction)
+                true
+            } else {
+                false
+            }
+
         }
 
         else -> {

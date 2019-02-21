@@ -38,4 +38,5 @@
     <string name="available_midi_devices">Available Midi devices</string>
     <string name="program_change_empty">No ProgramChanges found</string>
     <string name="dialog_save">save</string>
+    <string name="form_validation_empty">Can\'t be blank</string>
 </resources>
