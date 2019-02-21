@@ -33,6 +33,7 @@ enum class MidiStatusBytes(val value: Byte) {
     fun isSystemCommonMessage(): Boolean = value >= SYSTEM_EXCLUSIVE.value && value < TIMING_CLOCK.value
     fun isSystemRealTimeMessage(): Boolean = value >= TIMING_CLOCK.value && value <= RESET.value
 
+    @ExperimentalUnsignedTypes
     companion object {
         fun fromByte(b: Byte): MidiStatusBytes {
             if (b < SYSTEM_EXCLUSIVE.value) {
